@@ -1,0 +1,5 @@
+the program is based on a simple encryption algorithm. i defined two functions i.e. encrypt(letter,key) and decrypt(letter,key), these functions are used to ecrypt and to decrypt a characterrespectively, given an integer key.
+the principle behind encrypt() is as follows:
+the commonly used characters on the ascii table are found between 32 and 126, that is the range i used for the encryption process.
+any other character not in that range does not change.
+so when the function gets a character, it adds the key to the ascii value of that character, and converts it back to a character using the chr() function.
