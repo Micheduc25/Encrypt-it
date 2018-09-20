@@ -1,5 +1,19 @@
-the program is based on a simple encryption algorithm. i defined two functions i.e. encrypt(letter,key) and decrypt(letter,key), these functions are used to ecrypt and to decrypt a characterrespectively, given an integer key.
+The program is based on a simple encryption algorithm. i defined two functions i.e. encrypt(letter,key) and decrypt(letter,key), these functions are used to ecrypt and to decrypt a characterrespectively, given an integer key.
 the principle behind encrypt() is as follows:
 the commonly used characters on the ascii table are found between 32 and 126, that is the range i used for the encryption process.
 any other character not in that range does not change.
 so when the function gets a character, it adds the key to the ascii value of that character, and converts it back to a character using the chr() function.
+i have posted a file that describes this process better
+Now the principle behind the decrypt() function is the opposite of that of the encrypt function. it also takes an ascii character and an integer key, but this time it subtractracts the key from the ascii value of the character, and returns the character created.
+very large keys are equally handled.
+
+The graphical part is achieved using the python tkinter library
+i imported some modules which i used for the gui
+but much improvement has to be done on the graphics. 
+
+So the general principle is that, each text that is entered is copied into a string
+we then use a for loop to iterate over each character of the string
+Hence in the case of encryption, we apply the encrypt funtion to each character of the string, and for decryption we apply the decrypt function to each character.
+each character is then saved into a list. 
+The list is then converted to a string, using the join() method.
+and the resulting string is the encrypted or decrypted message!
