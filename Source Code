@@ -6,8 +6,8 @@ from tkinter import*
 
 
 def encrypt(letter, key):
-    if ord(letter)<32 or ord(letter)>126:
-        return letter
+    if ord(letter)<32 or ord(letter)>126:     #The ord() function returns the ascii value of the character
+        return character
     else:
         dist=127-ord(letter)
         if key>=dist:
@@ -16,7 +16,7 @@ def encrypt(letter, key):
             return character
         else:
             final=ord(letter)+key
-            character=chr(final)
+            character=chr(final)      #The char function returns the character equivalent of an ascii value(it is the reverse of ord())
             return character
 
 def decrypt(letter, key):
