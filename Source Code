@@ -1,0 +1,242 @@
+from tkinter.scrolledtext import ScrolledText
+from tkinter.filedialog import *
+from tkinter.messagebox import*
+from tkinter import*
+
+
+
+def encrypt(letter, key):
+    if ord(letter)<32 or ord(letter)>126:
+        return letter
+    else:
+        dist=127-ord(letter)
+        if key>=dist:
+            final=(key-dist)%95
+            character= chr(final+32)
+            return character
+        else:
+            final=ord(letter)+key
+            character=chr(final)
+            return character
+
+def decrypt(letter, key):
+    if ord(letter)<32 or ord(letter)>126:
+        return letter
+    else:
+        dist = ord(letter) - 31
+        if key>=dist:
+
+            final=(key-dist)%95
+            character=chr(126-final)
+            return character
+
+        else:
+            final=ord(letter)-key
+            character=chr(final)
+            return character
+
+
+
+def main():
+
+    
+    def saveas(name,message):
+
+        try:
+            EncyptedMessage = open(name, 'w')
+            EncyptedMessage.write(message)
+
+            EncyptedMessage.close()
+        except FileNotFoundError:
+            pass
+
+
+
+    def Decryption1():
+        readButton.destroy()
+        encryptButton.destroy()
+        decryptButton.destroy()#removes the other buttons
+        okButtonD.grid(row=0,column=1)
+        displayScreen.configure(text='Enter the text to be Decoded')
+        text.delete(1.0, END)
+        text.grid(row=2,column=0)
+        KeyEntry.grid(row=3,column=0)
+
+    def Encryption1():
+        readButton.destroy()
+        encryptButton.destroy()
+        decryptButton.destroy()#removes the other buttons
+        okButtonE.grid(row=0,column=1)
+        displayScreen.configure(text='Enter the text to be Encrypted')
+        text.delete(1.0,END)
+        text.grid(row=2,column=0)
+        KeyEntry.grid(row=3,column=0)
+
+    def readfile():
+        name=askopenfilename(initialdir='textfiles',filetypes=[('Text File','.txt'),("pdf file",'.pdf')])
+
+        try:
+            file=open(name,'r+')
+            text1=file.read()
+
+            readButton.destroy()
+            encryptButton.destroy()
+            decryptButton.destroy()
+            Ebuttonf.grid(row=0,column=0)
+            Dbuttonf.grid(row=0,column=1)
+            displayScreen.configure(text='Do you want to Encode the file or Decode it?')
+            text.delete(1.0, END)
+            text.grid(row=2, column=0)
+            text.insert(1.0,text1)
+            KeyEntry.grid(row=3,column=0)
+        except FileNotFoundError:
+            showerror(title='File Not Found ',message="The file was not found")
+            dec=askquestion(title='Retry',message='Do You want to try to Read again?')
+            if dec=='yes':
+                readfile()
+            else:
+                pass
+
+    def Encrypt2():
+
+        textToEncode=text.get(1.0,END)
+        try:
+            key=int(KeyEntry.get())
+            KeyEntry.delete(0, END)
+
+
+            text.delete(1.0,END)
+
+            codedMessage = []
+            for letter in textToEncode:
+                s=encrypt(letter,key)
+                codedMessage.append(s)
+            FinalMessage = ''.join(codedMessage)
+
+            text.insert(END,FinalMessage)
+            saveDecision=askquestion(title='Save', message='Do you Want to save the coded message?')
+            if saveDecision=='yes':
+                name=asksaveasfilename(initialdir='textfiles\\encrypted',defaultextension='.txt', filetypes=[('Text File','.txt'),('pdf file','.pdf')])
+                saveas(name,FinalMessage)
+            displayScreen.configure(text='Message Sucessfully Encrypted ')
+        except ValueError:
+            showerror(title='Key Error', message='Please Enter a Valid Key')
+    def Decrypt2():
+        textToDecode = text.get(1.0, END)
+        try:
+            key = int(KeyEntry.get())
+            KeyEntry.delete(0, END)
+
+            text.delete(1.0, END)
+
+            decodedMessage = []
+            for i in textToDecode:
+                s=decrypt(i,key)
+                decodedMessage.append(s)
+
+            a=len(decodedMessage)-1
+            
+
+            FinalMessage = ''.join(decodedMessage)
+            text.insert(END, FinalMessage)
+            saveDecision = askquestion(title='Save', message='Do you Want to save the decoded message?')
+            if saveDecision == 'yes':
+                name = asksaveasfilename(initialdir='textfiles\\decrypted', defaultextension='.txt', filetypes=[('Text File', '.txt'),('pdf file','.pdf')])
+                saveas(name, FinalMessage)
+            displayScreen.configure(text='Message Sucessfully Decrypted ')
+
+        except ValueError:
+            showerror(title='Key Error', message='Please Enter a Valid Password')
+    def Restart():
+        decision=askquestion(title='Restart',message='Are you sure you want to Restart the Program?')
+        if decision=='yes':
+            root.destroy()
+            main()
+    def close():
+        decision=askquestion(title='Close ENCRYPTIT',message='Do you really want to close?')
+        if decision=='yes':
+            root.destroy()
+
+    #Menu command Functions
+    def howTo():
+        file=open('HowToUse.txt','r+')
+        text.delete(1.0,END)
+        text.grid(row=2,column=0)
+        text1=file.read()
+        text.insert(END,text1)
+
+    def About():
+        file = open('AboutAuthor.txt', 'r+')
+        text.delete(1.0, END)
+        text.grid(row=2, column=0)
+        text1 = file.read()
+        text.insert(END, text1)
+
+    def new():
+        Restart()
+        
+    root=Tk()
+    root.geometry('700x600')
+    root.configure(bg='black')
+    root.title('ENCRYPTIT! \t \t \t by Ndjock Michel',)
+
+    
+    #The Menu
+    menu1=Menu()
+    root.config(menu=menu1)
+    fileMenu=Menu(menu1,tearoff=0)
+    
+    fileMenu.add_command(label='New',command=new)
+    fileMenu.add_command(label="Open File",command=readfile)
+    fileMenu.add_command(label='Close',command=close)
+    menu1.add_cascade(label='File',menu=fileMenu)
+
+    editMenu=Menu(menu1,tearoff=0)
+    editMenu.add_command(label='Copy')
+    editMenu.add_command(label='Cut')
+    menu1.add_cascade(label='Edit',menu=editMenu)
+
+    HelpMenu=Menu(menu1,tearoff=0)
+    HelpMenu.add_command(label='About Author',command=About)
+    HelpMenu.add_command(label='How to use ENCRYPTIT',command=howTo)
+    menu1.add_cascade(label='Help',menu=HelpMenu)
+
+    #Close on Escape
+    root.bind('<Escape>',lambda dummy=0:close())
+
+    #Open About Author on CTRL-a
+    root.bind('<Control-a>',lambda dummy=0:About())
+
+    #Open how to use on CTRL-h
+    root.bind('<Control-h>',lambda dummy=0:howTo())
+
+
+    buttFrame=Frame()
+    displayScreen=Label(text='Do you want to encode, decode or read from a textfile?',font=('Algerian',14),bg='yellow',height=5)
+    encryptButton=Button(buttFrame,text='Encrypt',font=('Algerian',),command=Encryption1)
+    decryptButton=Button(buttFrame,text='Decrypt',font=('Algerian',),command=Decryption1)
+    readButton=Button(buttFrame,text='Read File', font=('Arial,'),command=readfile)
+    okButtonD=Button(buttFrame,text='OK',width=7,command=Decrypt2)
+    okButtonE=Button(buttFrame,text='OK',width=7,command=Encrypt2)
+    Ebuttonf=Button(buttFrame,text='Encode file',command=Encrypt2)
+    Dbuttonf=Button(buttFrame,text='Decode file',command=Decrypt2)
+    KeyEntry=Entry()
+    KeyEntry.insert(0,'Enter the key')
+    text=ScrolledText()
+    buttFrame2=Frame()
+    RestartButton=Button(buttFrame2,text='Restart Program',command=Restart)
+
+    encryptButton.grid(row=0,column=0)
+    decryptButton.grid(row=0,column=1)
+    readButton.grid(row=0,column=2)
+    displayScreen.grid(row=0,column=0,sticky=N,ipadx=40)
+    buttFrame.grid(row=1,column=0)
+    buttFrame2.grid(row=4,column=0)
+    RestartButton.grid(row=0,column=0)
+    root.protocol('WM_DELETE_WINDOW',close)
+
+   
+        
+    mainloop()
+
+main()
